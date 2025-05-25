@@ -17,10 +17,20 @@ export const loginHandler = async (
   await dbConnect();
 
   const user = await User.findOne({ email });
+  if (user.IsBanned) {
+    res.status(403).json({
+      error: "Your account has been banned please contact admin.",
+    });
+    return;
+  }
+
   if (!user) {
     res.status(401).json({ error: "Invalid email or password" });
     return;
   }
+
+  user.lastLogin = new Date();
+  await user.save();
 
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) {

@@ -26,7 +26,7 @@ router.get(
         mostUsedCategoryAgg,
       ] = await Promise.all([
         User.countDocuments(),
-        User.countDocuments({ isBanned: true }),
+        User.countDocuments({ IsBanned: true }),
         Score.countDocuments(),
         Question.countDocuments(),
         User.countDocuments({

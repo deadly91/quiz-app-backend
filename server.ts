@@ -20,11 +20,10 @@ app.post("/api/auth/register", registerHandler);
 app.post("/api/auth/login", loginHandler);
 app.post("/api/quiz/save-score", saveScoreHandler);
 app.get("/api/quiz/get-questions", getQuestionsHandler);
-app.get("/api/quiz/scores", getScoresHandler);
 app.use("/api/admin/metrics", metricsRoute);
 app.use("/api/admin/users", usersRoute);
 app.use("/api/admin", adminRoutes);
-
+app.use("/api/quiz", getScoresHandler);
 app.get("/", (req, res) => {
   res.send("Backend is working!");
   console.log(req.statusCode);

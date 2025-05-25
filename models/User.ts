@@ -6,6 +6,8 @@ const UserSchema = new mongoose.Schema(
     password: { type: String, required: true },
     nickname: { type: String, required: true },
     role: { type: String, enum: ["player", "admin"], default: "player" },
+    IsBanned: { type: Boolean, default: false },
+    lastLogin: { type: Date, default: Date.now },
   },
   { timestamps: true }
 );

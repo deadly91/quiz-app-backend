@@ -23,7 +23,7 @@ app.get("/api/quiz/scores", getScoresHandler);
 
 app.get("/api/admin/users", usersRoute);
 app.use("/api/admin", adminRoutes);
-
+//
 app.get("/", (req, res) => {
   res.send("Backend is working!");
   console.log(req.statusCode);

@@ -11,17 +11,18 @@ import getQuestionsHandler from "./routes/quiz/get-questions";
 import getScoresHandler from "./routes/quiz/scores";
 import adminRoutes from "./routes/admin";
 import usersRoute from "./routes/admin/users";
+import metricsRoute from "./routes/admin/metrics";
 const app = express();
 app.use(express.json());
+
 app.get("/api/user", metricshandler);
 app.post("/api/auth/register", registerHandler);
 app.post("/api/auth/login", loginHandler);
 app.post("/api/quiz/save-score", saveScoreHandler);
 app.get("/api/quiz/get-questions", getQuestionsHandler);
 app.get("/api/quiz/scores", getScoresHandler);
-//app.get("/api/admin", adminRoutes);
-
-app.get("/api/admin/users", usersRoute);
+app.use("/api/admin/metrics", metricsRoute);
+app.use("/api/admin/users", usersRoute);
 app.use("/api/admin", adminRoutes);
 
 app.get("/", (req, res) => {

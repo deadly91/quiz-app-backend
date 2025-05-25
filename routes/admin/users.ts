@@ -7,7 +7,7 @@ const router = express.Router();
 
 // GET /admin/users — Admin can view all users
 router.get(
-  "/users",
+  "/",
   authMiddleware,
   requireAdmin,
   async (_req: AuthenticatedRequest, res: Response): Promise<void> => {

@@ -8,6 +8,7 @@ const UserSchema = new mongoose.Schema(
     role: { type: String, enum: ["player", "admin"], default: "player" },
     IsBanned: { type: Boolean, default: false },
     lastLogin: { type: Date, default: Date.now },
+    totalPoints: { type: Number, default: 0 },
   },
   { timestamps: true }
 );

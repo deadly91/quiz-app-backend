@@ -12,9 +12,10 @@ import getScoresHandler from "./routes/quiz/scores";
 import adminRoutes from "./routes/admin";
 import usersRoute from "./routes/admin/users";
 import metricsRoute from "./routes/admin/metrics";
+import questionhandler from "./routes/admin/questions/add-question";
 const app = express();
 app.use(express.json());
-
+app.use("/api/admin/questions", questionhandler);
 app.get("/api/user", metricshandler);
 app.post("/api/auth/register", registerHandler);
 app.post("/api/auth/login", loginHandler);

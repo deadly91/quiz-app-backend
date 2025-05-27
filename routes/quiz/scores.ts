@@ -1,39 +1,29 @@
 import express from "express";
-import { Request, Response } from "express";
 import dbConnect from "../../lib/db";
 import Score from "../../models/Score";
-import { authMiddleware } from "../../middleware/auth";
 
 const router = express.Router();
 
-router.get(
-  "/scores",
-  authMiddleware,
-  async (_req: Request, res: Response): Promise<void> => {
+router.get("/scores", async (req, res) => {
+  try {
     await dbConnect();
 
-    const scores = await Score.find({}).sort({ score: -1 }).limit(10).lean();
+    const scores = await Score.find()
+      .sort({ score: -1 })
+      .limit(10)
+      .populate("userId", "nickname");
 
-    if (!scores.length) {
-      res.json(
-        Array.from({ length: 5 }, (_, i) => ({
-          email: `Player ${i + 1}`,
-          score: 0,
-          date: new Date().toISOString(),
-        }))
-      );
-      return;
-    }
-
-    const ranked = scores.map((s, i) => ({
-      rank: i + 1,
-      email: s.email || "Unknown",
-      score: s.score,
-      date: s.date,
+    const formatted = scores.map((entry, index) => ({
+      rank: index + 1,
+      nickname: entry.userId?.nickname || "Unknown",
+      score: entry.score,
     }));
 
-    res.json(ranked);
+    res.status(200).json(formatted);
+  } catch (err) {
+    console.error("Error fetching scores:", err);
+    res.status(500).json({ error: "Failed to get scores" });
   }
-);
+});
 
 export default router;

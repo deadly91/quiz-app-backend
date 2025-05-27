@@ -1,40 +1,41 @@
 import express, { Request, Response } from "express";
 import dbConnect from "../../lib/db";
+import { authMiddleware } from "../../middleware/auth";
 import Score from "../../models/Score";
 import User from "../../models/User";
-import { authMiddleware } from "../../middleware/auth";
 
 const router = express.Router();
 
-interface AuthenticatedRequest extends Request {
+interface AuthRequest extends Request {
   userId?: string;
 }
 
 router.post(
   "/submit",
   authMiddleware,
-  async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  async (req: AuthRequest, res: Response): Promise<void> => {
     try {
       await dbConnect();
-
       const { score } = req.body;
       const userId = req.userId;
 
+      console.log("Received score submission:", { userId, score });
+
       if (!userId || typeof score !== "number") {
+        console.warn("Invalid submission data:", { userId, score });
         res.status(400).json({ error: "Invalid data" });
         return;
       }
 
-      // Save score to Score collection
       await Score.create({ userId, score });
-
-      // Add to totalPoints
       await User.findByIdAndUpdate(userId, { $inc: { totalPoints: score } });
 
-      res.json({ success: true });
+      res.status(200).json({ success: true });
+      return;
     } catch (err) {
-      console.error("Error submitting score", err);
+      console.error("Submit error:", err);
       res.status(500).json({ error: "Failed to submit score" });
+      return;
     }
   }
 );

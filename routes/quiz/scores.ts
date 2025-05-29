@@ -1,28 +1,26 @@
 import express from "express";
-import dbConnect from "../../lib/db";
-import Score from "../../models/Score";
+import User from "../../models/User";
 
 const router = express.Router();
 
-router.get("/scores", async (req, res) => {
+// GET /api/quiz/scores (GLOBAL leaderboard by totalPoints)
+router.get("/scores", async (_req, res) => {
   try {
-    await dbConnect();
-
-    const scores = await Score.find()
-      .sort({ score: -1 })
+    const topUsers = await User.find({}, { nickname: 1, totalPoints: 1 })
+      .sort({ totalPoints: -1 })
       .limit(10)
-      .populate("userId", "nickname");
+      .lean();
 
-    const formatted = scores.map((entry, index) => ({
+    const ranked = topUsers.map((user, index) => ({
       rank: index + 1,
-      nickname: entry.userId?.nickname || "Unknown",
-      score: entry.score,
+      nickname: user.nickname || "Unknown",
+      score: user.totalPoints || 0,
     }));
 
-    res.status(200).json(formatted);
+    res.json(ranked);
   } catch (err) {
-    console.error("Error fetching scores:", err);
-    res.status(500).json({ error: "Failed to get scores" });
+    console.error("Leaderboard error:", err);
+    res.status(500).json({ error: "Failed to load leaderboard" });
   }
 });
 

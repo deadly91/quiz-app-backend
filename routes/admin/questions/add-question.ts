@@ -6,7 +6,7 @@ import Question from "../../../models/Question";
 const router = express.Router();
 
 router.post(
-  "/add-question",
+  "/",
   authMiddleware,
   requireAdmin,
   async (req, res): Promise<void> => {

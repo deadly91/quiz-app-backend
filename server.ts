@@ -3,24 +3,19 @@ dotenv.config();
 
 import express from "express";
 import dbConnect from "./lib/db";
-import metricshandler from "./routes/user/metrics";
 import { registerHandler } from "./routes/auth/register";
 import { loginHandler } from "./routes/auth/login";
 import adminRoutes from "./routes/admin";
-import usersRoute from "./routes/admin/users";
-import metricsRoute from "./routes/admin/metrics";
-import questionhandler from "./routes/admin/questions/add-question";
+import adminusersRoute from "./routes/admin/users";
 import quizRoutes from "./routes/quiz";
-
+import userRoutes from "./routes/user";
 const app = express();
 app.use(express.json());
 
-app.use("/api/admin/questions", questionhandler);
-app.get("/api/user", metricshandler);
+app.use("/api/user", userRoutes);
 app.post("/api/auth/register", registerHandler);
 app.post("/api/auth/login", loginHandler);
-app.use("/api/admin/metrics", metricsRoute);
-app.use("/api/admin/users", usersRoute);
+app.use("/api/admin/users", adminusersRoute);
 app.use("/api/admin", adminRoutes);
 app.use("/api/quiz", quizRoutes);
 

@@ -20,7 +20,7 @@ router.get(
     try {
       await dbConnect();
 
-      const quizType = req.query.type || "react-native";
+      const quizType = req.query.type;
       const questions = await Question.find({ category: quizType }).select(
         "-__v"
       );

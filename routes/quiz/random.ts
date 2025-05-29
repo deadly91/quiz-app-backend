@@ -9,11 +9,9 @@ router.get("/random", authMiddleware, async (req: Request, res: Response) => {
   try {
     await dbConnect();
 
-    const quizType = req.query.type || "react-native";
-
+    // Randomly select 10 questions from all categories
     const randomQuestions = await Question.aggregate([
-      { $match: { category: quizType } },
-      { $sample: { size: 10 } }, // randomly select 10
+      { $sample: { size: 10 } },
     ]);
 
     res.status(200).json({ questions: randomQuestions });
